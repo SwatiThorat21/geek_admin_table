@@ -1,72 +1,85 @@
-import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+export default function UserTable({
+  usersData,
+  selectedRows,
+  setSelectedRows,
+}) {
+  function handleRowSelect(userId) {
+    setSelectedRows((prevSelecetd) =>
+      prevSelecetd.includes(userId)
+        ? prevSelecetd.filter((id) => userId != id)
+        : [...prevSelecetd, userId]
+    );
+  }
 
-export default function UserTable() {
-  const [users, setUsers] = useState([]);
-  useEffect(() => {
-    fetch(
-      "https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json"
-    )
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        console.log(data);
-        setUsers(data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }, []);
-
+  function handleAllRowSelect() {
+    if (usersData.length === selectedRows.length) {
+      setSelectedRows([]);
+    } else {
+      setSelectedRows(usersData.map((user) => user.id));
+    }
+  }
+  console.log("selectRows..", selectedRows);
   return (
-    <div>
-      {/* Search Input */}
-      <input type="text" placeholder="Search by name, email or role" />
-
-      {/* User Table */}
-      <table>
-        <thead>
-          <tr>
-            <th>
-              <input type="checkbox" />
-            </th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.id}>
-              <td>
-                <input type="checkbox" />
-              </td>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-              <td>{user.role}</td>
-              <td>
-                <button className="edit-btn">✏️</button>
-                <button className="delete-btn">🗑️</button>
-              </td>
+    <>
+      <div className="user_table_container">
+        <table className="user_table">
+          <thead>
+            <tr>
+              <th>
+                <input
+                  type="checkbox"
+                  onChange={handleAllRowSelect}
+                  checked={
+                    selectedRows.length === usersData.length &&
+                    usersData.length > 0
+                  }
+                />
+              </th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {/* Delete Selected Button */}
-      <button className="delete-selected">Delete Selected</button>
-
-      {/* Pagination */}
-      <div className="pagination">
-        <button className="prev-page">«</button>
-        <button className="page active">1</button>
-        <button className="page">2</button>
-        <button className="page">3</button>
-        <button className="page">4</button>
-        <button className="page">5</button>
-        <button className="next-page">»</button>
+          </thead>
+          <tbody>
+            {usersData.map((user) => (
+              <tr
+                key={user.id}
+                className={selectedRows.includes(user.id) ? "selected" : ""}
+              >
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={selectedRows.includes(user.id)}
+                    onChange={() => handleRowSelect(user.id)}
+                  />
+                </td>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>{user.role}</td>
+                <td>
+                  <button className="edit-btn">✏️</button>
+                  <button className="delete-btn">🗑️</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-    </div>
+    </>
   );
 }
+
+UserTable.propTypes = {
+  usersData: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+      role: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  selectedRows: PropTypes.arrayOf(PropTypes.string).isRequired,
+  setSelectedRows: PropTypes.func.isRequired,
+};

@@ -1,0 +1,17 @@
+table{
+    width: 100%;
+}
+.searchInput{
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 2rem;
+}
+.bottom_warpper{
+  display: flex;
+  align-items: center;
+  gap: 15rem;
+  margin-top: 1rem;
+}
+.selected{
+  background-color: gray;
+}

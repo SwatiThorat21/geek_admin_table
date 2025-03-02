@@ -1,11 +1,11 @@
 import './App.css'
-import UserTable from "./components/userTable"
+import TableListPage from "./components/TableListPage"
 
 function App() {
 
   return (
     <>
-      <UserTable />
+      <TableListPage />
     </>
   )
 }
