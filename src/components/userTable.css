@@ -1,17 +1,27 @@
-table{
-    width: 100%;
+table {
+  width: 100%;
 }
-.searchInput{
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 2rem;
+.searchInput {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 2rem;
 }
-.bottom_warpper{
+.bottom_warpper {
   display: flex;
   align-items: center;
   gap: 15rem;
   margin-top: 1rem;
 }
-.selected{
+.selected {
   background-color: gray;
+}
+.searchbarWrapper {
+  position: relative;
+}
+.search-icon {
+  position: absolute;
+  top: 5px;
+  right: 0;
+  width: 22px;
+  cursor: pointer;
 }

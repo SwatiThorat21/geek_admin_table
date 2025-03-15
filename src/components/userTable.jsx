@@ -3,12 +3,13 @@ export default function UserTable({
   usersData,
   selectedRows,
   setSelectedRows,
+  handleRowDelete,
 }) {
   function handleRowSelect(userId) {
-    setSelectedRows((prevSelecetd) =>
-      prevSelecetd.includes(userId)
-        ? prevSelecetd.filter((id) => userId != id)
-        : [...prevSelecetd, userId]
+    setSelectedRows((previousSelectedRows) =>
+      previousSelectedRows.includes(userId)
+        ? previousSelectedRows.filter((id) => userId != id)
+        : [...previousSelectedRows, userId]
     );
   }
 
@@ -19,7 +20,8 @@ export default function UserTable({
       setSelectedRows(usersData.map((user) => user.id));
     }
   }
-  console.log("selectRows..", selectedRows);
+
+  console.log("selectedRows..", selectedRows);
   return (
     <>
       <div className="user_table_container">
@@ -60,7 +62,7 @@ export default function UserTable({
                 <td>{user.role}</td>
                 <td>
                   <button className="edit-btn">✏️</button>
-                  <button className="delete-btn">🗑️</button>
+                  <button className="delete-btn" onClick={() => handleRowDelete(user.id)}>🗑️</button>
                 </td>
               </tr>
             ))}
@@ -82,4 +84,5 @@ UserTable.propTypes = {
   ).isRequired,
   selectedRows: PropTypes.arrayOf(PropTypes.string).isRequired,
   setSelectedRows: PropTypes.func.isRequired,
+  handleRowDelete: PropTypes.func.isRequired,
 };
