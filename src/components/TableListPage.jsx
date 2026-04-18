@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import UserTable from "./UserTable";
 import "./userTable.css";
 import Pagination from "./Pagination";
@@ -7,7 +7,6 @@ import searchIcon from "../assets/search-icon.png";
 export default function TableListPage() {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(10);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -31,12 +30,24 @@ export default function TableListPage() {
       });
   }, []);
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.role.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  const normalizedSearchTerm = searchTerm.trim().toLowerCase();
+
+  const filteredUsers = useMemo(() => {
+    if (!normalizedSearchTerm) {
+      return users;
+    }
+
+    return users.filter(
+      (user) =>
+        user.name.toLowerCase().includes(normalizedSearchTerm) ||
+        user.email.toLowerCase().includes(normalizedSearchTerm) ||
+        user.role.toLowerCase().includes(normalizedSearchTerm)
+    );
+  }, [users, normalizedSearchTerm]);
 
   function handleDeleteSelected() {
     setUsers((prevUsers) =>
@@ -63,15 +74,12 @@ export default function TableListPage() {
     setEditableRow(userId);
   }
 
-  function handleSearch() {
-    setSearchQuery(searchTerm);
-    setCurrentPage(1);
+  function handleSearchChange(e) {
+    setSearchTerm(e.target.value);
   }
 
-  function handleKeyDown(e) {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
+  function clearSearch() {
+    setSearchTerm("");
   }
 
   const lastPostIndex = currentPage * postsPerPage;
@@ -88,15 +96,20 @@ export default function TableListPage() {
           className="searchInput"
           id="searchInput"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyDown={handleKeyDown}
+          onChange={handleSearchChange}
         />
-        <img
-          src={searchIcon}
-          alt="search-icon"
-          className="search-icon"
-          onClick={handleSearch}
-        />
+        <img src={searchIcon} alt="search-icon" className="search-icon" />
+        {searchTerm && (
+          <button
+            type="button"
+            className="clear-search-btn"
+            onClick={clearSearch}
+            aria-label="Clear search"
+            title="Clear search"
+          >
+            Clear
+          </button>
+        )}
       </div>
 
       <UserTable

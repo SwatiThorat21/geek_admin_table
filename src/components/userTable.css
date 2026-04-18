@@ -47,7 +47,7 @@ table.user_table tr:nth-child(odd) {
 }
 .searchInput {
   max-width: 100%;
-  padding: 12px;
+  padding: 12px 112px 12px 12px;
   margin-bottom: 1rem;
   width: 97%;
   border: none;
@@ -114,9 +114,28 @@ button:hover {
 .search-icon {
   position: absolute;
   top: 9px;
-  right: 35px;
+  right: 84px;
   width: 22px;
-  cursor: pointer;
+  pointer-events: none;
+}
+
+.clear-search-btn {
+  position: absolute;
+  top: 7px;
+  right: 14px;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 9px;
+  border: 1px solid #d7def8;
+  background: #eef2ff;
+  color: #31416f;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.clear-search-btn:hover {
+  background: #e3eaff;
+  border-color: #c7d2fe;
 }
 .input {
   border: 1px solid #cfd7ff;
