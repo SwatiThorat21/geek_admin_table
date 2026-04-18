@@ -3,76 +3,74 @@ import "./pagination.css";
 
 const Pagination = ({
   totalPosts,
-  postsPerpage,
-  setcurrentpage,
+  postsPerPage,
+  setCurrentPage,
   currentPage,
 }) => {
-  let totalPages = Math.ceil(totalPosts / postsPerpage);
-  let maxPageButtons = 3;
+  const totalPages = Math.ceil(totalPosts / postsPerPage);
+  const maxPageButtons = 3;
 
   let startPage = Math.max(1, currentPage - 1);
-  let endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
+  const endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
 
   if (endPage - startPage + 1 < maxPageButtons) {
     startPage = Math.max(1, endPage - maxPageButtons + 1);
   }
 
-  let pages = [];
+  const pages = [];
 
-  for (let i = startPage; i <= endPage; i++) {
+  for (let i = startPage; i <= endPage; i += 1) {
     pages.push(i);
   }
+
   return (
-    <>
-      <div className="pagination">
-        {/* First Page Button - Disabled on first page */}
-        <button
-          className="first-page"
-          onClick={() => setcurrentpage(1)}
-          disabled={currentPage === 1}
-        >
-          ««
-        </button>
+    <div className="pagination">
+      <button
+        className="first-page"
+        onClick={() => setCurrentPage(1)}
+        disabled={currentPage === 1}
+        aria-label="First page"
+      >
+        {"<<"}
+      </button>
 
-        {/* Previous Button - Disabled on first page */}
-        <button
-          className="prev-page"
-          onClick={() => setcurrentpage(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          ‹
-        </button>
+      <button
+        className="prev-page"
+        onClick={() => setCurrentPage(currentPage - 1)}
+        disabled={currentPage === 1}
+        aria-label="Previous page"
+      >
+        {"<"}
+      </button>
 
-        {/* Page Number Buttons */}
-        {pages.map((page) => (
-          <button
-            key={page}
-            className={`page ${currentPage === page ? "active" : ""}`}
-            onClick={() => setcurrentpage(page)}
-          >
-            {page}
-          </button>
-        ))}
-
-        {/* Next Button - Disabled on last page */}
+      {pages.map((page) => (
         <button
-          className="next-page"
-          onClick={() => setcurrentpage(currentPage + 1)}
-          disabled={currentPage === totalPages}
+          key={page}
+          className={`page ${currentPage === page ? "active" : ""}`}
+          onClick={() => setCurrentPage(page)}
         >
-          ›
+          {page}
         </button>
+      ))}
 
-        {/* Last Page Button - Disabled on last page */}
-        <button
-          className="last-page"
-          onClick={() => setcurrentpage(totalPages)}
-          disabled={currentPage === totalPages}
-        >
-          »»
-        </button>
-      </div>
-    </>
+      <button
+        className="next-page"
+        onClick={() => setCurrentPage(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        aria-label="Next page"
+      >
+        {">"}
+      </button>
+
+      <button
+        className="last-page"
+        onClick={() => setCurrentPage(totalPages)}
+        disabled={currentPage === totalPages}
+        aria-label="Last page"
+      >
+        {">>"}
+      </button>
+    </div>
   );
 };
 
@@ -80,7 +78,7 @@ export default Pagination;
 
 Pagination.propTypes = {
   totalPosts: PropTypes.number.isRequired,
-  postsPerpage: PropTypes.number.isRequired,
-  setcurrentpage: PropTypes.number.isRequired,
+  postsPerPage: PropTypes.number.isRequired,
+  setCurrentPage: PropTypes.func.isRequired,
   currentPage: PropTypes.number.isRequired,
 };
